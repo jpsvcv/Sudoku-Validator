@@ -1,4 +1,6 @@
 '''
+by gitHub account: jpsvcv
+
 Sudoku - Finally I'd learned how Sudoku works
 
 295743861
