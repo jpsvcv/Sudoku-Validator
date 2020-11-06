@@ -26,17 +26,17 @@ YES
 NO
 '''
 
-
-def decrease_row_count(row):
-    if row > 0:
-        return row - 1
-
-
 def print_message(msg):
     print(msg)
 
 
-def test_data(option):
+def decrease_row_count(row):
+
+    if row > 0:
+        return row - 1
+
+
+def input_test_data(option):
     if option == 0:
         board.append(list('295743861'))
         board.append(list('431865927'))
@@ -82,10 +82,10 @@ def read_data():
     return board
 
 
-def draw_board(sudoku):
+def print_board():
     print()
     row = 0
-    for it in sudoku:
+    for it in main_board:
         col = 0
         for i in it:
             if col == 2 or col == 5:
@@ -131,36 +131,27 @@ def create_sub_squares():
     return sub_lists
 
 
-def create_test_data():
-    return [x for x in range(1, 10)]
-
-
-# 2a) - Check the Main row
-def compute_row(row_test_data):
-    for row in main_board:
-        if sum(row) == 45:  # pre-condition
-            tmp_row = row_test_data[:]
-            for row_item in row:  # check row
-                if row_item not in row_test_data:
-                    return False
-                else:
-                    tmp_row.remove(row_item)
-            if len(tmp_row) > 0:
-                return False
-        else:
+def compute_list(data):
+    for row in data:
+        if sorted(row) != test_data:
             return False
     return True
 
 
+# 2a) - Check the Main row
+def compute_row():
+    return compute_list(main_board)
+
+
 # 2b) - Check the Main column
-def compute_col(col_test_data):
+def compute_col():
     index = 0
     while index < 9:
-        tmp_col = col_test_data[:]
+        tmp_col = test_data[:]
         for col in main_board:
             for col_item in col:
                 if col[index] == col_item:  # get the right position
-                    if col_item not in col_test_data:
+                    if col_item not in test_data:
                         return False
                     else:
                         tmp_col.remove(col_item)
@@ -172,41 +163,28 @@ def compute_col(col_test_data):
 
 
 # 2c) - Check the sub_squares
-def compute_squares(sub_squares_test_data):
-    for square in sub_lists:
-        if sum(square) == 45:
-            temp = sub_squares_test_data[:]
-            for item in square:
-                if item not in sub_squares_test_data:
-                    return False
-                else:
-                    temp.remove(item)
-            if len(temp) > 0:
-                return False
-        else:
-            return False
-
-    return True
+def compute_squares():
+    return compute_list(sub_squares)
 
 
 board = []
+test_data = [x for x in range(1, 10)]
 
 # print(read_data(board))
 for i in range(2):
     # 1 - Board and Sub_squares building process
-    board = test_data(i)
+    board = input_test_data(i)
     main_board = list_str2int()
-    draw_board(main_board)
+    print_board()
     sub_lists = [[] for i in range(9)]
     sub_squares = create_sub_squares()
 
     # 2 - Compute the Table [row, column, squares]
-    if compute_row(create_test_data()):
-        if compute_col(create_test_data()):
-            if compute_squares(create_test_data()):
-                print('\nYes')
-            else:
-                print('\nNo')
+    if compute_row() and compute_squares():
+        if compute_col():
+            print('\nYes')
+    else:
+        print('\nNo')
 
     # reset
     board = main_board = sub_lists = sub_squares = []
